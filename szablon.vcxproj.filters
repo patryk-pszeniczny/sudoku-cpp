@@ -44,4 +44,9 @@
   <ItemGroup>
     <None Include="cpp.hint" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Desktop\background.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
