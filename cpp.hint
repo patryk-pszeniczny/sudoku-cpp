@@ -1,0 +1,8 @@
+// Pliki wskazówek ułatwiają interpretowanie identyfikatorów programu Visual C++ w środowisku Visual Studio IDE
+// takich jak nazwy funkcji i makr.
+// Aby uzyskać więcej informacji, zobacz https://go.microsoft.com/fwlink/?linkid=865984
+#define _NODISCARD_FRIEND
+// Pliki wskazówek ułatwiają interpretowanie identyfikatorów programu Visual C++ w środowisku Visual Studio IDE
+// takich jak nazwy funkcji i makr.
+// Aby uzyskać więcej informacji, zobacz https://go.microsoft.com/fwlink/?linkid=865984
+#define _NODISCARD_FRIEND
