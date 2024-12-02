@@ -1,7 +1,4 @@
 <a id="readme-top"></a>
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
 <br />
 <div align="center">
   <a href="https://github.com/patryk-pszeniczny/sudoku-cpp">
@@ -87,9 +84,3 @@ This app is a testament to:
 [sudoku-login]: https://i.imgur.com/i2EJ75q.png
 [sudoku-game]: https://i.imgur.com/ZevSYGm.png
 [sudoku-about]: https://i.imgur.com/SsFJXXp.png
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/patryk-pszeniczny/sudoku-cpp/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/patryk-pszeniczny/sudoku-cpp/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/patryk-pszeniczny/sudoku-cpp/issues
