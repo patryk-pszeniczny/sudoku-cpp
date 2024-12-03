@@ -1,28 +1,27 @@
 ﻿#include "GameForm.h"
 #include "GameUser.h"
-#include "SudokuGenerate.h"
+#include "GameLogic.h"
 #include <iostream>
 #include <string>
 #include <algorithm>
 
 
 namespace szablon {
-    GameForm::GameForm(GameUser* gameuser, int removeDigits) {
+    GameForm::GameForm(GameUser* gameuser, int difficulty) {
         InitializeComponent();
         this->gameUser = gameuser;
-        this->difficulty = removeDigits;
+        this->difficulty = difficulty;
         this->entries = 0;
         this->entries_wrong = 0;
         this->hint = 0;
-
         this->createGame();
 
     }
     void GameForm::createGame() {
-        this->generator = new SudokuGenerate();
-        this->generator->fillArrays();
-        this->generator->GenerateSudoku();
-        this->generator->removeDigits(this->difficulty);
+        this->gameLogic = new GameLogic();
+        this->gameLogic->fillArrays();
+        this->gameLogic->GenerateSudoku();
+        this->gameLogic->removeDigits(this->difficulty);
         this->CreateTextBoxes();
         this->unFocusBox();
         this->UpdateUserName();
@@ -51,8 +50,8 @@ namespace szablon {
                 }
             }
         }
-        label1->Text += generator->generate_time+"ms";
-        label2->Text += generator->samples;
+        label1->Text += gameLogic->generate_time+"ms";
+        label2->Text += gameLogic->samples;
     }
     void GameForm::CreateTextBox(TableLayoutPanel^ parentTable, int row, int col) {
         TextBox^ text = gcnew TextBox();
@@ -72,7 +71,7 @@ namespace szablon {
         text->TextAlign = HorizontalAlignment::Center;
         text->KeyPress += gcnew KeyPressEventHandler(this, &GameForm::TextBox_KeyPress);
 
-        int value = generator->board[row][col];
+        int value = gameLogic->board[row][col];
         text->Name = L"text_" + row + "_" + col;
         text->Tag = gcnew array<int>{ row, col };
 
@@ -109,8 +108,8 @@ namespace szablon {
             if (coordinates != nullptr) {
                 int row = coordinates[0];
                 int col = coordinates[1];
-                generator->board[row][col] = value;
-                int valueCheck = generator->copy_board[row][col];
+                gameLogic->board[row][col] = value;
+                int valueCheck = gameLogic->copy_board[row][col];
                 if (value == valueCheck) {
                     //G ACCTION
                     this->unFocusBox();
@@ -121,7 +120,7 @@ namespace szablon {
                     textBox->Text = value.ToString();
                     textBox->ReadOnly = true;
                     textBox->Click += gcnew EventHandler(this, &GameForm::LockedTextBox_Click);
-                    generator->copy_board[row][col] = 0;
+                    gameLogic->copy_board[row][col] = 0;
                     this->entries++;
                     this->gameUser->addPoints(5);
                     this->UpdatePoints();
@@ -147,7 +146,7 @@ namespace szablon {
         this->table->Select();
     }
     void GameForm::verify_button_Click(System::Object^ sender, System::EventArgs^ e) {
-        if (this->generator->checkSudoku()) {
+        if (this->gameLogic->checkSudoku()) {
             System::String^ userName = gcnew System::String(this->gameUser->getName().c_str());
             System::String^ message = "Gratulacje " + userName + "!\nUdało Ci się poprawnie rozwiązać sudoku!\n\nUzyskując " +
                 this->gameUser->getPoints().ToString() + " Punktów \n";
@@ -220,12 +219,12 @@ namespace szablon {
             for (int colOffset = 0; colOffset < 3; colOffset++) {
                 int globalRow = blockRow * 3 + rowOffset;
                 int globalCol = blockCol * 3 + colOffset;
-                int value = this->generator->copy_board[globalRow][globalCol];
+                int value = this->gameLogic->copy_board[globalRow][globalCol];
 
                 if (value != 0) {
                     UpdateTextBox(tb, rowOffset, colOffset, value);
-                    this->generator->board[globalRow][globalCol] = value;
-                    this->generator->copy_board[globalRow][globalCol] = 0;
+                    this->gameLogic->board[globalRow][globalCol] = value;
+                    this->gameLogic->copy_board[globalRow][globalCol] = 0;
                     this->gameUser->removePoints(5);
                     this->UpdatePoints();
                     return true;

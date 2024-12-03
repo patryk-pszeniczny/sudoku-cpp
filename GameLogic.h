@@ -1,16 +1,15 @@
 #pragma once
 #include <random>
-using namespace System;
-using namespace System::Collections::Generic;
 namespace szablon {
 
-class SudokuGenerate {
+    class GameLogic {
     public:
         int board[9][9];
         int copy_board[9][9];
         double generate_time;
         int samples;
-        SudokuGenerate();
+
+        GameLogic();
         void GenerateSudoku();
         void fillArrays();
         bool solveSudoku();
@@ -22,6 +21,6 @@ class SudokuGenerate {
         bool fillValues();
         bool hasEmptyCell();
     protected:
-        ~SudokuGenerate();
+        ~GameLogic();
     };
 }

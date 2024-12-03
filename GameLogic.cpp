@@ -1,23 +1,23 @@
-#include "SudokuGenerate.h"
+#include "GameLogic.h"
 #include <algorithm> 
 #include <random>
 #include <chrono>
 
 namespace szablon {
-    SudokuGenerate::SudokuGenerate() {
+    GameLogic::GameLogic() {
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         this->rand = std::mt19937(seed);
         this->generate_time = 0;
         this->samples = 0;
     }
-    void SudokuGenerate::GenerateSudoku() {
+    void GameLogic::GenerateSudoku() {
         auto start = std::chrono::high_resolution_clock::now();
         while (fillValues()) {}
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         this->generate_time = static_cast<double>(duration.count()) / 1000000; //nano -> ms
     }
-    void SudokuGenerate::fillArrays() {
+    void GameLogic::fillArrays() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 board[row][col] = 0;
@@ -25,7 +25,7 @@ namespace szablon {
             }
         }
     }
-    bool SudokuGenerate::solveSudoku() {
+    bool GameLogic::solveSudoku() {
         int row, col;
         if (!hasEmptyCell()) return true;
         for (int value = 1; value <= 9; value++) {
@@ -39,7 +39,7 @@ namespace szablon {
         return false;
     }
 
-    bool SudokuGenerate::fillValues() {
+    bool GameLogic::fillValues() {
         this->samples++;
         int values[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         std::shuffle(values, values + 9, rand);
@@ -61,7 +61,7 @@ namespace szablon {
         }
         return false;
     }
-    bool SudokuGenerate::hasEmptyCell() {
+    bool GameLogic::hasEmptyCell() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
                 if (board[r][c] == 0) {
@@ -72,7 +72,7 @@ namespace szablon {
         return false;
     }
 
-    bool SudokuGenerate::CheckIfSafe(int& row, int& col, int num) {
+    bool GameLogic::CheckIfSafe(int& row, int& col, int num) {
         for (int c = 0; c < 9; c++) {
             if (board[row][c] == num) {
                 return false;
@@ -96,10 +96,10 @@ namespace szablon {
         return true;
     }
 
-    bool SudokuGenerate::checkSudoku() {
+    bool GameLogic::checkSudoku() {
         for (int row = 0; row < 9; row++) {
-            bool rowCheck[9]={false};
-            bool colCheck[9]={false};
+            bool rowCheck[9] = { false };
+            bool colCheck[9] = { false };
             for (int col = 0; col < 9; col++) {
                 int rowValue = board[row][col];
                 int colValue = board[col][row];
@@ -111,7 +111,7 @@ namespace szablon {
         }
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
-                bool blockCheck[9]={false};
+                bool blockCheck[9] = { false };
                 for (int r = blockRow * 3; r < blockRow * 3 + 3; r++) {
                     for (int c = blockCol * 3; c < blockCol * 3 + 3; c++) {
                         int value = board[r][c];
@@ -127,7 +127,7 @@ namespace szablon {
         return true;
     }
 
-    void SudokuGenerate::removeDigits(int count) {
+    void GameLogic::removeDigits(int count) {
         while (count > 0) {
             int cellId = rand() % 81;
             int row = cellId / 9;
@@ -140,7 +140,7 @@ namespace szablon {
             }
         }
     }
-    SudokuGenerate::~SudokuGenerate() {
+    GameLogic::~GameLogic() {
         delete copy_board;
         delete board;
     }

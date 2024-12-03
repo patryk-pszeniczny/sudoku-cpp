@@ -1,5 +1,5 @@
 #pragma once
-#include "SudokuGenerate.h"
+#include "GameLogic.h"
 #include "GameUser.h"
 namespace szablon {
 
@@ -51,7 +51,7 @@ namespace szablon {
 		void setGameUser(GameUser* gameuser);
 
 	private:
-		SudokuGenerate* generator;
+		GameLogic* gameLogic;
 		GameUser* gameUser;
 
 		int entries;
