@@ -132,16 +132,16 @@ namespace szablon {
 				static_cast<System::Byte>(238)));
 			this->label_group->Location = System::Drawing::Point(7, 70);
 			this->label_group->Name = L"label_group";
-			this->label_group->Size = System::Drawing::Size(140, 27);
+			this->label_group->Size = System::Drawing::Size(147, 27);
 			this->label_group->TabIndex = 3;
-			this->label_group->Text = L"Semetr III, Grupa II";
+			this->label_group->Text = L"Semestr III, Grupa II";
 			this->label_group->Click += gcnew System::EventHandler(this, &AboutForm::label_group_Click);
 			// 
 			// label_year
 			// 
 			this->label_year->AutoSize = true;
 			this->label_year->Font = (gcnew System::Drawing::Font(L"Oswald", 12, System::Drawing::FontStyle::Bold));
-			this->label_year->Location = System::Drawing::Point(144, 70);
+			this->label_year->Location = System::Drawing::Point(158, 70);
 			this->label_year->Name = L"label_year";
 			this->label_year->Size = System::Drawing::Size(45, 27);
 			this->label_year->TabIndex = 4;
