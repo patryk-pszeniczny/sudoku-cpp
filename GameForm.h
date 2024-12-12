@@ -1,6 +1,7 @@
 #pragma once
 #include "GameLogic.h"
 #include "GameUser.h"
+#include "GameStats.h"
 namespace szablon {
 
 	using namespace System;
@@ -32,18 +33,25 @@ namespace szablon {
 	private: System::Windows::Forms::GroupBox^ groupBox3;
 	private: System::Windows::Forms::GroupBox^ groupBox2;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
+	private: System::Windows::Forms::GroupBox^ groupBox4;
+	private: System::Windows::Forms::Label^ high_score_sum;
+	private: System::Windows::Forms::Label^ high_score_name;
+	private: System::Windows::Forms::Label^ high_score_points;
+	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Label^ label_total;
+	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label_hint;
 
 
 	public:
-		GameForm(std::string name, std::string difficulty, int removeDigits);
-
+		GameForm(GameUser* gameuser, std::string difficulty, int removeDigits, GameStats* gamestats);
 		void createGame();
 
 		void UpdateDifficulty();
 
 		GameUser* getGameUser();
+		GameStats* getGameStats();
 		int getEntriesRight();
 		int getEntriesWrong();
 		int getHint();
@@ -53,6 +61,7 @@ namespace szablon {
 	private:
 		GameLogic* gameLogic;
 		GameUser* gameUser;
+		GameStats* gameStats;
 
 		int entries;
 		int entries_wrong;
@@ -62,6 +71,7 @@ namespace szablon {
 		void unFocusBox();
 		void UpdateUserName();
 		void UpdatePoints();
+		void UpdateHighScore();
 		void CreateTextBoxes();
 		void CreateTextBox(TableLayoutPanel^ parentTable, int row, int col);
 		bool ProcessBlock(TableLayoutPanel^ tb, int blockRow, int blockCol);
@@ -78,9 +88,6 @@ namespace szablon {
 			if (components) {
 				delete components;
 			}
-			if (gameUser) {
-				delete gameUser;
-			} 
 		}
 
 
@@ -126,22 +133,28 @@ namespace szablon {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->high_score_sum = (gcnew System::Windows::Forms::Label());
+			this->high_score_name = (gcnew System::Windows::Forms::Label());
+			this->high_score_points = (gcnew System::Windows::Forms::Label());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->label_right_guess = (gcnew System::Windows::Forms::Label());
+			this->label_wrong_guess = (gcnew System::Windows::Forms::Label());
 			this->label_hint = (gcnew System::Windows::Forms::Label());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->label_difficulty = (gcnew System::Windows::Forms::Label());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->label_username = (gcnew System::Windows::Forms::Label());
 			this->label_points = (gcnew System::Windows::Forms::Label());
-			this->label_wrong_guess = (gcnew System::Windows::Forms::Label());
-			this->label_right_guess = (gcnew System::Windows::Forms::Label());
-			this->label_difficulty = (gcnew System::Windows::Forms::Label());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label_total = (gcnew System::Windows::Forms::Label());
 			this->table->SuspendLayout();
 			this->panel1->SuspendLayout();
-			this->groupBox1->SuspendLayout();
-			this->groupBox2->SuspendLayout();
+			this->groupBox4->SuspendLayout();
 			this->groupBox3->SuspendLayout();
+			this->groupBox2->SuspendLayout();
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// table
@@ -334,22 +347,22 @@ namespace szablon {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
+			this->label1->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
 			this->label1->ForeColor = System::Drawing::SystemColors::Control;
-			this->label1->Location = System::Drawing::Point(6, 64);
+			this->label1->Location = System::Drawing::Point(6, 55);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(137, 36);
+			this->label1->Size = System::Drawing::Size(117, 31);
 			this->label1->TabIndex = 5;
 			this->label1->Text = L"Generowanie: ";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
+			this->label2->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
 			this->label2->ForeColor = System::Drawing::SystemColors::Control;
-			this->label2->Location = System::Drawing::Point(6, 100);
+			this->label2->Location = System::Drawing::Point(6, 86);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(73, 36);
+			this->label2->Size = System::Drawing::Size(65, 31);
 			this->label2->TabIndex = 6;
 			this->label2->Text = L"Kroki: ";
 			// 
@@ -376,6 +389,7 @@ namespace szablon {
 			this->panel1->BackColor = System::Drawing::Color::Transparent;
 			this->panel1->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"panel1.BackgroundImage")));
 			this->panel1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->panel1->Controls->Add(this->groupBox4);
 			this->panel1->Controls->Add(this->groupBox3);
 			this->panel1->Controls->Add(this->groupBox2);
 			this->panel1->Controls->Add(this->groupBox1);
@@ -385,71 +399,172 @@ namespace szablon {
 			this->panel1->Size = System::Drawing::Size(385, 586);
 			this->panel1->TabIndex = 8;
 			// 
+			// groupBox4
+			// 
+			this->groupBox4->Controls->Add(this->high_score_sum);
+			this->groupBox4->Controls->Add(this->high_score_name);
+			this->groupBox4->Controls->Add(this->high_score_points);
+			this->groupBox4->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
+			this->groupBox4->ForeColor = System::Drawing::Color::White;
+			this->groupBox4->Location = System::Drawing::Point(48, 456);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(302, 116);
+			this->groupBox4->TabIndex = 20;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"HighScore";
+			// 
+			// high_score_sum
+			// 
+			this->high_score_sum->AutoSize = true;
+			this->high_score_sum->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->high_score_sum->ForeColor = System::Drawing::SystemColors::Control;
+			this->high_score_sum->Location = System::Drawing::Point(6, 80);
+			this->high_score_sum->Name = L"high_score_sum";
+			this->high_score_sum->Size = System::Drawing::Size(134, 31);
+			this->high_score_sum->TabIndex = 15;
+			this->high_score_sum->Text = L"Suma Punktów: ";
+			// 
+			// high_score_name
+			// 
+			this->high_score_name->AutoSize = true;
+			this->high_score_name->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->high_score_name->ForeColor = System::Drawing::SystemColors::Control;
+			this->high_score_name->Location = System::Drawing::Point(5, 24);
+			this->high_score_name->Name = L"high_score_name";
+			this->high_score_name->Size = System::Drawing::Size(70, 31);
+			this->high_score_name->TabIndex = 14;
+			this->high_score_name->Text = L"Nazwa: ";
+			// 
+			// high_score_points
+			// 
+			this->high_score_points->AutoSize = true;
+			this->high_score_points->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->high_score_points->ForeColor = System::Drawing::SystemColors::Control;
+			this->high_score_points->Location = System::Drawing::Point(6, 49);
+			this->high_score_points->Name = L"high_score_points";
+			this->high_score_points->Size = System::Drawing::Size(76, 31);
+			this->high_score_points->TabIndex = 13;
+			this->high_score_points->Text = L"Punkty: ";
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->Controls->Add(this->label_right_guess);
+			this->groupBox3->Controls->Add(this->label_wrong_guess);
+			this->groupBox3->Controls->Add(this->label_hint);
+			this->groupBox3->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
+			this->groupBox3->ForeColor = System::Drawing::Color::White;
+			this->groupBox3->Location = System::Drawing::Point(48, 331);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(302, 119);
+			this->groupBox3->TabIndex = 19;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"Wpisy";
+			// 
+			// label_right_guess
+			// 
+			this->label_right_guess->AutoSize = true;
+			this->label_right_guess->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->label_right_guess->ForeColor = System::Drawing::SystemColors::Control;
+			this->label_right_guess->Location = System::Drawing::Point(6, 24);
+			this->label_right_guess->Name = L"label_right_guess";
+			this->label_right_guess->Size = System::Drawing::Size(106, 31);
+			this->label_right_guess->TabIndex = 10;
+			this->label_right_guess->Text = L"Poprawne: 0";
+			// 
+			// label_wrong_guess
+			// 
+			this->label_wrong_guess->AutoSize = true;
+			this->label_wrong_guess->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->label_wrong_guess->ForeColor = System::Drawing::SystemColors::Control;
+			this->label_wrong_guess->Location = System::Drawing::Point(6, 55);
+			this->label_wrong_guess->Name = L"label_wrong_guess";
+			this->label_wrong_guess->Size = System::Drawing::Size(85, 31);
+			this->label_wrong_guess->TabIndex = 11;
+			this->label_wrong_guess->Text = L"B³êdne: 0";
+			// 
 			// label_hint
 			// 
 			this->label_hint->AutoSize = true;
-			this->label_hint->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
+			this->label_hint->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
 			this->label_hint->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_hint->Location = System::Drawing::Point(6, 96);
+			this->label_hint->Location = System::Drawing::Point(6, 86);
 			this->label_hint->Name = L"label_hint";
-			this->label_hint->Size = System::Drawing::Size(131, 36);
+			this->label_hint->Size = System::Drawing::Size(116, 31);
 			this->label_hint->TabIndex = 16;
 			this->label_hint->Text = L"Wskazówki: 0";
+			// 
+			// groupBox2
+			// 
+			this->groupBox2->Controls->Add(this->label_difficulty);
+			this->groupBox2->Controls->Add(this->label1);
+			this->groupBox2->Controls->Add(this->label2);
+			this->groupBox2->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
+			this->groupBox2->ForeColor = System::Drawing::Color::White;
+			this->groupBox2->Location = System::Drawing::Point(48, 204);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(302, 121);
+			this->groupBox2->TabIndex = 18;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"Ustawienia";
+			// 
+			// label_difficulty
+			// 
+			this->label_difficulty->AutoSize = true;
+			this->label_difficulty->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->label_difficulty->ForeColor = System::Drawing::SystemColors::Control;
+			this->label_difficulty->Location = System::Drawing::Point(6, 24);
+			this->label_difficulty->Name = L"label_difficulty";
+			this->label_difficulty->Size = System::Drawing::Size(91, 31);
+			this->label_difficulty->TabIndex = 8;
+			this->label_difficulty->Text = L"Trudnoœæ: ";
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->label_total);
+			this->groupBox1->Controls->Add(this->label_username);
+			this->groupBox1->Controls->Add(this->label_points);
+			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
+			this->groupBox1->ForeColor = System::Drawing::Color::White;
+			this->groupBox1->Location = System::Drawing::Point(48, 86);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(302, 112);
+			this->groupBox1->TabIndex = 17;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Informacje";
 			// 
 			// label_username
 			// 
 			this->label_username->AutoSize = true;
-			this->label_username->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
+			this->label_username->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
 			this->label_username->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_username->Location = System::Drawing::Point(5, 24);
+			this->label_username->Location = System::Drawing::Point(6, 23);
 			this->label_username->Name = L"label_username";
-			this->label_username->Size = System::Drawing::Size(74, 36);
+			this->label_username->Size = System::Drawing::Size(65, 31);
 			this->label_username->TabIndex = 14;
 			this->label_username->Text = L"Nazwa:";
 			// 
 			// label_points
 			// 
 			this->label_points->AutoSize = true;
-			this->label_points->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
+			this->label_points->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
 			this->label_points->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_points->Location = System::Drawing::Point(5, 60);
+			this->label_points->Location = System::Drawing::Point(6, 54);
 			this->label_points->Name = L"label_points";
-			this->label_points->Size = System::Drawing::Size(87, 36);
+			this->label_points->Size = System::Drawing::Size(76, 31);
 			this->label_points->TabIndex = 13;
 			this->label_points->Text = L"Punkty: ";
 			// 
-			// label_wrong_guess
+			// label3
 			// 
-			this->label_wrong_guess->AutoSize = true;
-			this->label_wrong_guess->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
-			this->label_wrong_guess->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_wrong_guess->Location = System::Drawing::Point(6, 60);
-			this->label_wrong_guess->Name = L"label_wrong_guess";
-			this->label_wrong_guess->Size = System::Drawing::Size(99, 36);
-			this->label_wrong_guess->TabIndex = 11;
-			this->label_wrong_guess->Text = L"B³êdne: 0";
-			// 
-			// label_right_guess
-			// 
-			this->label_right_guess->AutoSize = true;
-			this->label_right_guess->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
-			this->label_right_guess->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_right_guess->Location = System::Drawing::Point(6, 24);
-			this->label_right_guess->Name = L"label_right_guess";
-			this->label_right_guess->Size = System::Drawing::Size(123, 36);
-			this->label_right_guess->TabIndex = 10;
-			this->label_right_guess->Text = L"Poprawne: 0";
-			// 
-			// label_difficulty
-			// 
-			this->label_difficulty->AutoSize = true;
-			this->label_difficulty->Font = (gcnew System::Drawing::Font(L"Oswald", 15.25F, System::Drawing::FontStyle::Bold));
-			this->label_difficulty->ForeColor = System::Drawing::SystemColors::Control;
-			this->label_difficulty->Location = System::Drawing::Point(6, 24);
-			this->label_difficulty->Name = L"label_difficulty";
-			this->label_difficulty->Size = System::Drawing::Size(105, 36);
-			this->label_difficulty->TabIndex = 8;
-			this->label_difficulty->Text = L"Trudnoœæ: ";
+			this->label3->AutoSize = true;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Oswald", 48, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label3->ForeColor = System::Drawing::Color::White;
+			this->label3->Location = System::Drawing::Point(29, 0);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(343, 109);
+			this->label3->TabIndex = 7;
+			this->label3->Text = L"STATYSTYKI";
 			// 
 			// button1
 			// 
@@ -469,58 +584,16 @@ namespace szablon {
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &GameForm::reset_button_Click);
 			// 
-			// groupBox1
+			// label_total
 			// 
-			this->groupBox1->Controls->Add(this->label_username);
-			this->groupBox1->Controls->Add(this->label_points);
-			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
-			this->groupBox1->ForeColor = System::Drawing::Color::White;
-			this->groupBox1->Location = System::Drawing::Point(48, 121);
-			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(302, 103);
-			this->groupBox1->TabIndex = 17;
-			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"Informacje";
-			// 
-			// groupBox2
-			// 
-			this->groupBox2->Controls->Add(this->label_difficulty);
-			this->groupBox2->Controls->Add(this->label1);
-			this->groupBox2->Controls->Add(this->label2);
-			this->groupBox2->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
-			this->groupBox2->ForeColor = System::Drawing::Color::White;
-			this->groupBox2->Location = System::Drawing::Point(48, 230);
-			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(302, 140);
-			this->groupBox2->TabIndex = 18;
-			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"Ustawienia";
-			// 
-			// groupBox3
-			// 
-			this->groupBox3->Controls->Add(this->label_right_guess);
-			this->groupBox3->Controls->Add(this->label_wrong_guess);
-			this->groupBox3->Controls->Add(this->label_hint);
-			this->groupBox3->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
-			this->groupBox3->ForeColor = System::Drawing::Color::White;
-			this->groupBox3->Location = System::Drawing::Point(48, 376);
-			this->groupBox3->Name = L"groupBox3";
-			this->groupBox3->Size = System::Drawing::Size(302, 136);
-			this->groupBox3->TabIndex = 19;
-			this->groupBox3->TabStop = false;
-			this->groupBox3->Text = L"Wpisy";
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Oswald", 48, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label3->ForeColor = System::Drawing::Color::White;
-			this->label3->Location = System::Drawing::Point(29, 12);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(343, 109);
-			this->label3->TabIndex = 7;
-			this->label3->Text = L"STATYSTYKI";
+			this->label_total->AutoSize = true;
+			this->label_total->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
+			this->label_total->ForeColor = System::Drawing::SystemColors::Control;
+			this->label_total->Location = System::Drawing::Point(6, 81);
+			this->label_total->Name = L"label_total";
+			this->label_total->Size = System::Drawing::Size(61, 31);
+			this->label_total->TabIndex = 15;
+			this->label_total->Text = L"Total: ";
 			// 
 			// GameForm
 			// 
@@ -542,12 +615,14 @@ namespace szablon {
 			this->table->ResumeLayout(false);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
-			this->groupBox1->ResumeLayout(false);
-			this->groupBox1->PerformLayout();
-			this->groupBox2->ResumeLayout(false);
-			this->groupBox2->PerformLayout();
+			this->groupBox4->ResumeLayout(false);
+			this->groupBox4->PerformLayout();
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox3->PerformLayout();
+			this->groupBox2->ResumeLayout(false);
+			this->groupBox2->PerformLayout();
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
 
 		}

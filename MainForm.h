@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "GameUser.h"
+#include "GameStats.h"
 namespace szablon {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -11,13 +11,23 @@ namespace szablon {
 	public ref class MainForm : public System::Windows::Forms::Form {
 	public:
 		MainForm(void);
-		System::Windows::Forms::Form^ gameform;
+		void setReadyToPlay(bool value);
+		bool getReadyToPlay();
+
+		void setGameStats(GameStats* gamestats);
+		GameStats* getGameStats();
 	private:
+		GameStats* gameStats;
+		System::Windows::Forms::Form^ gameform;
+
+		bool readyToPlay;
+
+		void statsToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 		void difficultyBar_Scroll(System::Object^ sender, System::EventArgs^ e);
 		void start_button_Click(System::Object^ sender, System::EventArgs^ e);
 		void clearToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
-		void exitToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e);
-		void aboutToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e);
+		void exitToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+		void aboutToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 	protected:
 		~MainForm() {
 			if (components) {
@@ -29,6 +39,7 @@ namespace szablon {
 		}
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;
 	protected:
+	private: System::Windows::Forms::ToolStripMenuItem^ statsToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ fileToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ clearToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ exitToolStripMenuItem;
@@ -59,6 +70,7 @@ namespace szablon {
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->statsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -68,9 +80,9 @@ namespace szablon {
 			// 
 			// menuStrip1
 			// 
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->fileToolStripMenuItem,
-					this->aboutToolStripMenuItem
+					this->aboutToolStripMenuItem, this->statsToolStripMenuItem
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
@@ -185,6 +197,13 @@ namespace szablon {
 			this->button1->Text = L"ROZPOCZNIJ GRE";
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &MainForm::start_button_Click);
+			// 
+			// statsToolStripMenuItem
+			// 
+			this->statsToolStripMenuItem->Name = L"statsToolStripMenuItem";
+			this->statsToolStripMenuItem->Size = System::Drawing::Size(43, 20);
+			this->statsToolStripMenuItem->Text = L"stats";
+			this->statsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::statsToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 

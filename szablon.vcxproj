@@ -124,6 +124,7 @@
     <ClCompile Include="AboutForm.cpp" />
     <ClCompile Include="GameForm.cpp" />
     <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameStats.cpp" />
     <ClCompile Include="GameUser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainForm.cpp" />
@@ -136,6 +137,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameStats.h" />
     <ClInclude Include="GameUser.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>

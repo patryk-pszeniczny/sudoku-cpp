@@ -1,23 +1,25 @@
 ﻿#include "GameForm.h"
 #include "GameUser.h"
 #include "GameLogic.h"
+#include "GameStats.h"
 #include <iostream>
 #include <string>
 #include <algorithm>
 
-
 namespace szablon {
-    GameForm::GameForm(std::string name, std::string difficulty, int difficultyRemoveDigits)
+    GameForm::GameForm(GameUser* gameuser, std::string difficulty, int difficultyRemoveDigits, GameStats* gameStats)
     {
         InitializeComponent();
-        this->gameUser = new GameUser(name, 0, difficulty);
+        this->gameUser = gameuser;
+        this->gameStats = gameStats;
         this->difficulty = difficultyRemoveDigits;
-        this->entries = 0;
-        this->entries_wrong = 0;
-        this->hint = 0;
         this->createGame();
     }
     void GameForm::createGame() {
+        this->entries = 0;
+        this->entries_wrong = 0;
+        this->hint = 0;
+
         this->gameLogic = new GameLogic();
         this->gameLogic->fillArrays();
         this->gameLogic->GenerateSudoku();
@@ -27,6 +29,7 @@ namespace szablon {
         this->UpdateUserName();
         this->UpdatePoints();
         this->UpdateDifficulty();
+        this->UpdateHighScore();
     }
     void GameForm::UpdateDifficulty() {
         this->label_difficulty->Text = "Trudność: " + gcnew System::String(this->gameUser->getDifficulty().c_str());
@@ -36,6 +39,12 @@ namespace szablon {
     }
     void GameForm::UpdatePoints() {
         this->label_points->Text = "Punkty: " + this->gameUser->getPoints();
+        this->label_total->Text = "Total: " + this->gameUser->getTotal();
+    }
+    void GameForm::UpdateHighScore() {
+        this->high_score_name->Text = "Nazwa: "+gcnew System::String(this->gameStats->getHighScoreUser()->getName().c_str());
+        this->high_score_points->Text = "Punkty: " + this->gameStats->getHighScore();
+        this->high_score_sum->Text = "Suma Punktów: " + this->gameStats->getHighScoreSum();
     }
     void GameForm::CreateTextBoxes() {
         for (int blockRow = 0; blockRow < 3; blockRow++)
@@ -140,7 +149,7 @@ namespace szablon {
                 MessageBoxButtons::OK,
                 MessageBoxIcon::Information
             );
-            this->gameUser->setPoints(0);
+            this->gameStats->saveUser(this->gameUser);
             this->Close();
             return;
         }
@@ -223,6 +232,9 @@ namespace szablon {
     GameUser* GameForm::getGameUser()
     {
         return this->gameUser;
+    }
+    GameStats* GameForm::getGameStats() {
+        return this->gameStats;
     }
     int GameForm::getEntriesRight()
     {
