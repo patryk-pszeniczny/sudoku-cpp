@@ -44,7 +44,6 @@ namespace szablon {
     void GameForm::UpdateHighScore() {
         this->high_score_name->Text = "Nazwa: "+gcnew System::String(this->gameStats->getHighScoreUser()->getName().c_str());
         this->high_score_points->Text = "Punkty: " + this->gameStats->getHighScore();
-        this->high_score_sum->Text = "Suma Punktów: " + this->gameStats->getHighScoreSum();
     }
     void GameForm::CreateTextBoxes() {
         for (int blockRow = 0; blockRow < 3; blockRow++)

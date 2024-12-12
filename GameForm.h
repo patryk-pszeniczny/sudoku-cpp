@@ -34,7 +34,7 @@ namespace szablon {
 	private: System::Windows::Forms::GroupBox^ groupBox2;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
 	private: System::Windows::Forms::GroupBox^ groupBox4;
-	private: System::Windows::Forms::Label^ high_score_sum;
+
 	private: System::Windows::Forms::Label^ high_score_name;
 	private: System::Windows::Forms::Label^ high_score_points;
 	private: System::Windows::Forms::Label^ label5;
@@ -134,7 +134,6 @@ namespace szablon {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
-			this->high_score_sum = (gcnew System::Windows::Forms::Label());
 			this->high_score_name = (gcnew System::Windows::Forms::Label());
 			this->high_score_points = (gcnew System::Windows::Forms::Label());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
@@ -401,28 +400,16 @@ namespace szablon {
 			// 
 			// groupBox4
 			// 
-			this->groupBox4->Controls->Add(this->high_score_sum);
 			this->groupBox4->Controls->Add(this->high_score_name);
 			this->groupBox4->Controls->Add(this->high_score_points);
 			this->groupBox4->Font = (gcnew System::Drawing::Font(L"Oswald", 10.25F, System::Drawing::FontStyle::Bold));
 			this->groupBox4->ForeColor = System::Drawing::Color::White;
 			this->groupBox4->Location = System::Drawing::Point(48, 456);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(302, 116);
+			this->groupBox4->Size = System::Drawing::Size(302, 84);
 			this->groupBox4->TabIndex = 20;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"HighScore";
-			// 
-			// high_score_sum
-			// 
-			this->high_score_sum->AutoSize = true;
-			this->high_score_sum->Font = (gcnew System::Drawing::Font(L"Oswald", 13.25F, System::Drawing::FontStyle::Bold));
-			this->high_score_sum->ForeColor = System::Drawing::SystemColors::Control;
-			this->high_score_sum->Location = System::Drawing::Point(6, 80);
-			this->high_score_sum->Name = L"high_score_sum";
-			this->high_score_sum->Size = System::Drawing::Size(134, 31);
-			this->high_score_sum->TabIndex = 15;
-			this->high_score_sum->Text = L"Suma Punktów: ";
 			// 
 			// high_score_name
 			// 

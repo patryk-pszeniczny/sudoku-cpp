@@ -5,7 +5,7 @@
 #include <sstream>
 #include <memory>
 namespace szablon {
-	GameStats::GameStats(): highScore(0), highScoreSum(0), gameuser(nullptr) {}
+	GameStats::GameStats(): gameuser(nullptr) {}
 
 	void GameStats::loadUser(std::string split) {
 		std::vector<std::string> lines;
@@ -26,7 +26,7 @@ namespace szablon {
 				int points = std::stoi(lines[i]);
 				pointSum += points;
 
-				if (highScore < points) {
+				if (!highScore || highScore < points) {
 					highScore = points;
 					this->gameuser = gameuser;
 				}
@@ -36,7 +36,7 @@ namespace szablon {
 			}
 		}
 
-		if (highScoreSum < pointSum) {
+		if (!highScoreSum || highScoreSum < pointSum) {
 			highScoreSum = pointSum;
 		}
 

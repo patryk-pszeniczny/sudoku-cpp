@@ -49,7 +49,7 @@ namespace szablon {
 	void MainForm::clearToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
 	{
 		this->readyToPlay = false;
-		this->gameStats = false;
+		this->gameStats = nullptr;
 		this->textBox1->Text = "Patryk Pszeniczny";
 		this->trackBar1->Value = 1;
 		this->groupBox2->Text = L"Peaceful";
