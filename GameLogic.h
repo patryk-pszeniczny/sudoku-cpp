@@ -4,22 +4,31 @@ namespace szablon {
 
     class GameLogic {
     public:
-        int board[9][9];
-        int copy_board[9][9];
-        double generate_time;
-        int samples;
-
         GameLogic();
+        double getGenerateTime();
+        
+        int getSamples();
+        int getBoard(int x, int y);
+        int getCopyBoard(int x, int y);
+
+        void setBoard(int x, int y, int value);
+        void setCopyBoard(int x, int y, int value);
+
         void GenerateSudoku();
         void fillArrays();
+        void removeDigits(int count);
+
         bool solveSudoku();
         bool checkSudoku();
-        void removeDigits(int count);
-    private:
-        std::mt19937 rand;
         bool CheckIfSafe(int& row, int& col, int num);
         bool fillValues();
         bool hasEmptyCell();
+    private:
+        std::mt19937 rand;
+        int board[9][9];
+        int copy_board[9][9];
+        int samples;
+        double generate_time;
     protected:
         ~GameLogic();
     };

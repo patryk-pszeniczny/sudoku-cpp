@@ -37,7 +37,7 @@ namespace szablon {
 
 
 	public:
-		GameForm(GameUser* gameuser, int removeDigits);
+		GameForm(std::string name, std::string difficulty, int removeDigits);
 
 		void createGame();
 
@@ -78,6 +78,9 @@ namespace szablon {
 			if (components) {
 				delete components;
 			}
+			if (gameUser) {
+				delete gameUser;
+			} 
 		}
 
 

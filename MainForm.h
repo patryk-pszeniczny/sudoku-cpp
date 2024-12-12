@@ -8,12 +8,10 @@ namespace szablon {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	//ref class GameForm;
 	public ref class MainForm : public System::Windows::Forms::Form {
 	public:
 		MainForm(void);
 		System::Windows::Forms::Form^ gameform;
-		GameUser* gameUser;
 	private:
 		void difficultyBar_Scroll(System::Object^ sender, System::EventArgs^ e);
 		void start_button_Click(System::Object^ sender, System::EventArgs^ e);
@@ -27,9 +25,6 @@ namespace szablon {
 			}
 			if (gameform) {
 				delete gameform;
-			}
-			if (gameUser) {
-				delete gameUser;
 			}
 		}
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;

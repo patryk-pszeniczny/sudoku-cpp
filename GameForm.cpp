@@ -7,15 +7,15 @@
 
 
 namespace szablon {
-    GameForm::GameForm(GameUser* gameuser, int difficulty) {
+    GameForm::GameForm(std::string name, std::string difficulty, int difficultyRemoveDigits)
+    {
         InitializeComponent();
-        this->gameUser = gameuser;
-        this->difficulty = difficulty;
+        this->gameUser = new GameUser(name, 0, difficulty);
+        this->difficulty = difficultyRemoveDigits;
         this->entries = 0;
         this->entries_wrong = 0;
         this->hint = 0;
         this->createGame();
-
     }
     void GameForm::createGame() {
         this->gameLogic = new GameLogic();
@@ -38,27 +38,23 @@ namespace szablon {
         this->label_points->Text = "Punkty: " + this->gameUser->getPoints();
     }
     void GameForm::CreateTextBoxes() {
-        for (int blockRow = 0; blockRow < 3; blockRow++) {
-            for (int blockCol = 0; blockCol < 3; blockCol++) {
-                TableLayoutPanel^ tb = dynamic_cast<TableLayoutPanel^>(this->table->GetControlFromPosition(blockCol, blockRow));
-                for (int rowOffset = 0; rowOffset < 3; rowOffset++) {
-                    for (int colOffset = 0; colOffset < 3; colOffset++) {
-                        int globalRow = blockRow * 3 + rowOffset;
-                        int globalCol = blockCol * 3 + colOffset;
-                        CreateTextBox(tb, globalRow, globalCol);
-                    }
-                }
+        for (int blockRow = 0; blockRow < 3; blockRow++)
+        for (int blockCol = 0; blockCol < 3; blockCol++) {
+            auto tb = dynamic_cast<TableLayoutPanel^>(this->table->GetControlFromPosition(blockCol, blockRow));
+            if (!tb) continue;
+            for (int rowOffset = 0; rowOffset < 3; rowOffset++)
+            for (int colOffset = 0; colOffset < 3; colOffset++) {
+                int globalRow = blockRow * 3 + rowOffset;
+                int globalCol = blockCol * 3 + colOffset;
+                CreateTextBox(tb, globalRow, globalCol);
             }
         }
-        label1->Text += gameLogic->generate_time+"ms";
-        label2->Text += gameLogic->samples;
+        label1->Text += this->gameLogic->getGenerateTime() + "ms";
+        label2->Text += this->gameLogic->getSamples();
     }
     void GameForm::CreateTextBox(TableLayoutPanel^ parentTable, int row, int col) {
         TextBox^ text = gcnew TextBox();
-        text->BackColor = System::Drawing::Color::FromArgb(
-            static_cast<System::Int32>(static_cast<System::Byte>(13)),
-            static_cast<System::Int32>(static_cast<System::Byte>(50)),
-            static_cast<System::Int32>(static_cast<System::Byte>(50)));
+        text->BackColor = System::Drawing::Color::FromArgb(13, 50, 50);
         text->Padding = System::Windows::Forms::Padding(0);
         text->Margin = System::Windows::Forms::Padding(0);
         text->Width = 57;
@@ -71,17 +67,14 @@ namespace szablon {
         text->TextAlign = HorizontalAlignment::Center;
         text->KeyPress += gcnew KeyPressEventHandler(this, &GameForm::TextBox_KeyPress);
 
-        int value = gameLogic->board[row][col];
+        int value = gameLogic->getBoard(row, col);
         text->Name = L"text_" + row + "_" + col;
         text->Tag = gcnew array<int>{ row, col };
 
         if (value != 0) {
             text->Text = value.ToString();
             text->ReadOnly = true;
-            text->BackColor = System::Drawing::Color::FromArgb(
-                static_cast<System::Int32>(static_cast<System::Byte>(20)),
-                static_cast<System::Int32>(static_cast<System::Byte>(170)),
-                static_cast<System::Int32>(static_cast<System::Byte>(20)));
+            text->BackColor = System::Drawing::Color::FromArgb(20, 170, 20);
             text->Click += gcnew EventHandler(this, &GameForm::LockedTextBox_Click);
         }
 
@@ -89,53 +82,43 @@ namespace szablon {
     }
     void GameForm::TextBox_KeyPress(Object^ sender, KeyPressEventArgs^ e)
     {
-        if (!Char::IsDigit(e->KeyChar) || e->KeyChar == '0') {
-            if (e->KeyChar != (char)Keys::Back) {
-                e->Handled = true;
-                return;
-            }
+        if ((!Char::IsDigit(e->KeyChar) || e->KeyChar == '0') && e->KeyChar != (char)Keys::Back) {
+            e->Handled = true;
+            return;
         }
         TextBox^ textBox = dynamic_cast<TextBox^>(sender);
-        if (textBox->ReadOnly) {
+        if (!textBox || textBox->ReadOnly) {
             this->unFocusBox();
             return;
         }
-        if (textBox != nullptr && e->KeyChar != (char)Keys::Back) {
-
-            int value = e->KeyChar - '0';
-            array<int>^ coordinates = dynamic_cast<array<int>^>(textBox->Tag);
-
-            if (coordinates != nullptr) {
-                int row = coordinates[0];
-                int col = coordinates[1];
-                gameLogic->board[row][col] = value;
-                int valueCheck = gameLogic->copy_board[row][col];
-                if (value == valueCheck) {
-                    //G ACCTION
-                    this->unFocusBox();
-                    textBox->BackColor = System::Drawing::Color::FromArgb(
-                        static_cast<System::Int32>(static_cast<System::Byte>(255)),
-                        static_cast<System::Int32>(static_cast<System::Byte>(170)),
-                        static_cast<System::Int32>(static_cast<System::Byte>(20)));
-                    textBox->Text = value.ToString();
-                    textBox->ReadOnly = true;
-                    textBox->Click += gcnew EventHandler(this, &GameForm::LockedTextBox_Click);
-                    gameLogic->copy_board[row][col] = 0;
-                    this->entries++;
-                    this->gameUser->addPoints(5);
-                    this->UpdatePoints();
-                }
-                else {
-                    this->entries_wrong++;
-                    this->gameUser->removePoints(1);
-                    this->UpdatePoints();
-                }
-                this->label_wrong_guess->Text = "Błędne: " + this->entries_wrong;
-                this->label_right_guess->Text = "Poprawne: " + this->entries;
-
-                return;
-            }
+        if (e->KeyChar == (char)Keys::Back) {
+            return;
         }
+        int value = e->KeyChar - '0';
+        auto coordinates = dynamic_cast<array<int>^>(textBox->Tag);
+        if (!coordinates) return;
+        
+        int row = coordinates[0];
+        int col = coordinates[1];
+
+        gameLogic->setBoard(row, col, value);
+        if (value == gameLogic->getCopyBoard(row, col)) {
+            this->unFocusBox();
+            textBox->BackColor = System::Drawing::Color::FromArgb(255, 170, 20);
+            textBox->Text = value.ToString();
+            textBox->ReadOnly = true;
+            textBox->Click += gcnew EventHandler(this, &GameForm::LockedTextBox_Click);
+            this->gameLogic->setCopyBoard(row, col, 0);
+            this->entries++;
+            this->gameUser->addPoints(5);
+        }
+        else {
+            this->entries_wrong++;
+            this->gameUser->removePoints(1);
+        }
+        this->UpdatePoints();
+        this->label_wrong_guess->Text = "Błędne: " + this->entries_wrong;
+        this->label_right_guess->Text = "Poprawne: " + this->entries;
     }
     void GameForm::LockedTextBox_Click(Object^ sender, EventArgs^ e) {
         this->unFocusBox();
@@ -182,25 +165,19 @@ namespace szablon {
     }
     void GameForm::reset_button_Click(System::Object^ sender, System::EventArgs^ e)
     {
-        for (int blockRow = 0; blockRow < 3; blockRow++) {
-            for (int blockCol = 0; blockCol < 3; blockCol++) {
-                TableLayoutPanel^ tb = dynamic_cast<TableLayoutPanel^>(this->table->GetControlFromPosition(blockCol, blockRow));
-                if (tb != nullptr) {
-                    for (int rowOffset = 0; rowOffset < 3; rowOffset++) {
-                        for (int colOffset = 0; colOffset < 3; colOffset++) {
-                            TextBox^ textBox = dynamic_cast<TextBox^>(tb->GetControlFromPosition(colOffset, rowOffset));
-                            if (textBox != nullptr) {
-                                tb->Controls->Remove(textBox);
-                            }
-                        }
-                    }
-                }
+        for (int blockRow = 0; blockRow < 3; blockRow++)
+        for (int blockCol = 0; blockCol < 3; blockCol++) {
+            auto tb = dynamic_cast<TableLayoutPanel^>(this->table->GetControlFromPosition(blockCol, blockRow));
+            if (tb == nullptr) continue;
+            for (int rowOffset = 0; rowOffset < 3; rowOffset++)
+            for (int colOffset = 0; colOffset < 3; colOffset++) {
+                auto textBox = dynamic_cast<TextBox^>(tb->GetControlFromPosition(colOffset, rowOffset));
+                if (textBox)tb->Controls->Remove(textBox);
             }
         }
         this->label_wrong_guess->Text = "Błędne: 0";
         this->label_right_guess->Text = "Poprawne: 0";
         this->label_hint->Text = "Wskazówki: 0";
-
         this->label1->Text = "Generowanie: ";
         this->label2->Text = "Kroki: ";
 
@@ -210,7 +187,6 @@ namespace szablon {
         this->gameUser->setPoints(0);
 
         this->createGame();
-
         this->unFocusBox();
 
     }
@@ -219,12 +195,12 @@ namespace szablon {
             for (int colOffset = 0; colOffset < 3; colOffset++) {
                 int globalRow = blockRow * 3 + rowOffset;
                 int globalCol = blockCol * 3 + colOffset;
-                int value = this->gameLogic->copy_board[globalRow][globalCol];
+                int value = this->gameLogic->getCopyBoard(globalRow, globalCol);
 
                 if (value != 0) {
                     UpdateTextBox(tb, rowOffset, colOffset, value);
-                    this->gameLogic->board[globalRow][globalCol] = value;
-                    this->gameLogic->copy_board[globalRow][globalCol] = 0;
+                    this->gameLogic->setBoard(globalRow, globalCol, value);
+                    this->gameLogic->setCopyBoard(globalRow, globalCol, 0);
                     this->gameUser->removePoints(5);
                     this->UpdatePoints();
                     return true;
@@ -237,10 +213,7 @@ namespace szablon {
         TextBox^ textBox = dynamic_cast<TextBox^>(tb->GetControlFromPosition(colOffset, rowOffset));
         if (textBox != nullptr) {
             //HELP ACTION
-            textBox->BackColor = System::Drawing::Color::FromArgb(
-                static_cast<System::Int32>(static_cast<System::Byte>(170)),
-                static_cast<System::Int32>(static_cast<System::Byte>(20)),
-                static_cast<System::Int32>(static_cast<System::Byte>(20)));
+            textBox->BackColor = System::Drawing::Color::FromArgb(170, 20, 20);
             textBox->Text = value.ToString();
             textBox->ReadOnly = true;
             textBox->Click += gcnew EventHandler(this, &GameForm::LockedTextBox_Click);

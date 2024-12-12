@@ -1,12 +1,15 @@
 #include "GameUser.h"
 GameUser::GameUser(std::string name, int points, std::string difficulty) : name(name), points(points), difficulty(difficulty) {}
-std::string GameUser::getName() const {
+std::string GameUser::getName() 
+{
     return this->name;
 }
-int GameUser::getPoints() const {
+int GameUser::getPoints() 
+{
     return this->points;
 }
-std::string GameUser::getDifficulty() const {
+std::string GameUser::getDifficulty() 
+{
     return this->difficulty;
 }
 

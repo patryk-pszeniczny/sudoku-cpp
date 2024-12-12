@@ -11,9 +11,9 @@ private:
 public:
     GameUser(std::string name, int points, std::string difficulty);
 
-    std::string getName() const;
-    int getPoints() const;
-    std::string getDifficulty() const;
+    std::string getName();
+    int getPoints();
+    std::string getDifficulty();
 
     void addPoints(int points);
     void removePoints(int points);

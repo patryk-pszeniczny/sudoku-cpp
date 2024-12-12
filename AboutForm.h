@@ -27,7 +27,8 @@ namespace szablon {
 		System::Windows::Forms::Label^ label_name;
 		System::Windows::Forms::Label^ label_course;
 		System::Windows::Forms::Label^ label_group;
-		System::Windows::Forms::Label^ label_year;
+	private: System::Windows::Forms::Label^ label1;
+
 		System::Windows::Forms::PictureBox^ pictureBox_logo;
 
 	protected:
@@ -45,7 +46,7 @@ namespace szablon {
 			this->label_name = (gcnew System::Windows::Forms::Label());
 			this->label_course = (gcnew System::Windows::Forms::Label());
 			this->label_group = (gcnew System::Windows::Forms::Label());
-			this->label_year = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_logo))->BeginInit();
 			this->groupBox_info->SuspendLayout();
 			this->SuspendLayout();
@@ -67,7 +68,7 @@ namespace szablon {
 			this->label_university->Font = (gcnew System::Drawing::Font(L"Oswald", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238)));
 			this->label_university->ForeColor = System::Drawing::Color::White;
-			this->label_university->Location = System::Drawing::Point(177, 426);
+			this->label_university->Location = System::Drawing::Point(178, 399);
 			this->label_university->Name = L"label_university";
 			this->label_university->Size = System::Drawing::Size(166, 26);
 			this->label_university->TabIndex = 9;
@@ -91,12 +92,11 @@ namespace szablon {
 			this->groupBox_info->Controls->Add(this->label_name);
 			this->groupBox_info->Controls->Add(this->label_course);
 			this->groupBox_info->Controls->Add(this->label_group);
-			this->groupBox_info->Controls->Add(this->label_year);
 			this->groupBox_info->Font = (gcnew System::Drawing::Font(L"Oswald", 11.25F, System::Drawing::FontStyle::Bold));
 			this->groupBox_info->ForeColor = System::Drawing::Color::White;
 			this->groupBox_info->Location = System::Drawing::Point(12, 12);
 			this->groupBox_info->Name = L"groupBox_info";
-			this->groupBox_info->Size = System::Drawing::Size(251, 105);
+			this->groupBox_info->Size = System::Drawing::Size(216, 109);
 			this->groupBox_info->TabIndex = 12;
 			this->groupBox_info->TabStop = false;
 			this->groupBox_info->Text = L"Dane";
@@ -130,22 +130,24 @@ namespace szablon {
 			this->label_group->AutoSize = true;
 			this->label_group->Font = (gcnew System::Drawing::Font(L"Oswald", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238)));
-			this->label_group->Location = System::Drawing::Point(7, 70);
+			this->label_group->Location = System::Drawing::Point(7, 75);
 			this->label_group->Name = L"label_group";
-			this->label_group->Size = System::Drawing::Size(147, 27);
+			this->label_group->Size = System::Drawing::Size(188, 27);
 			this->label_group->TabIndex = 3;
-			this->label_group->Text = L"Semestr III, Grupa II";
+			this->label_group->Text = L"Semestr III, Grupa II, 2024";
 			this->label_group->Click += gcnew System::EventHandler(this, &AboutForm::label_group_Click);
 			// 
-			// label_year
+			// label1
 			// 
-			this->label_year->AutoSize = true;
-			this->label_year->Font = (gcnew System::Drawing::Font(L"Oswald", 12, System::Drawing::FontStyle::Bold));
-			this->label_year->Location = System::Drawing::Point(158, 70);
-			this->label_year->Name = L"label_year";
-			this->label_year->Size = System::Drawing::Size(45, 27);
-			this->label_year->TabIndex = 4;
-			this->label_year->Text = L"2024";
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Oswald", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(238)));
+			this->label1->ForeColor = System::Drawing::Color::White;
+			this->label1->Location = System::Drawing::Point(113, 425);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(298, 27);
+			this->label1->TabIndex = 4;
+			this->label1->Text = L"Zastosowanie Programowania Obiektowego";
 			// 
 			// AboutForm
 			// 
@@ -154,6 +156,7 @@ namespace szablon {
 			this->BackColor = System::Drawing::Color::Teal;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(509, 507);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->groupBox_info);
 			this->Controls->Add(this->label_instruction);
 			this->Controls->Add(this->label_university);

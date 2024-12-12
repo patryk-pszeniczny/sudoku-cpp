@@ -23,15 +23,14 @@ namespace szablon {
     }
 	void MainForm::start_button_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		std::string valueName = msclr::interop::marshal_as<std::string>(this->textBox1->Text);
-		std::string valueDifficulty = msclr::interop::marshal_as<std::string>(this->groupBox2->Text);
+		std::string name = msclr::interop::marshal_as<std::string>(this->textBox1->Text);
+		std::string difficulty = msclr::interop::marshal_as<std::string>(this->groupBox2->Text);
+		int digitsDifficulty = this->trackBar1->Value;
 		if (this->gameform != nullptr) {
 			this->gameform->Close();
 			this->gameform = nullptr;
 		}
-		if(this->gameUser == nullptr || this->gameUser->getName() != valueName)
-			this->gameUser = new GameUser(valueName, 0, valueDifficulty);
-		this->gameform = gcnew GameForm(gameUser, this->trackBar1->Value);
+		this->gameform = gcnew GameForm(name, difficulty, digitsDifficulty);
 		this->gameform->Show();
 		
 	}
@@ -40,9 +39,6 @@ namespace szablon {
 		this->textBox1->Text = "Patryk Pszeniczny";
 		this->trackBar1->Value = 1;
 		this->groupBox2->Text = L"Peaceful";
-		if (this->gameUser != nullptr) {
-			this->gameUser = nullptr;
-		}
 		if (this->gameform != nullptr) {
 			this->gameform->Close();
 			this->gameform = nullptr;
