@@ -81,6 +81,6 @@ This app is a testament to:
 
 ---
 
-[sudoku-login]: https://i.imgur.com/i2EJ75q.png
-[sudoku-game]: https://i.imgur.com/ZevSYGm.png
-[sudoku-about]: https://i.imgur.com/hCHztrw.png
+[sudoku-login]: https://i.imgur.com/JW3qW4t.png
+[sudoku-game]: https://i.imgur.com/4jRAB60.png
+[sudoku-about]: https://i.imgur.com/MfnpeMh.png
